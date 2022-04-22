@@ -108,35 +108,39 @@
 				<sec:authorize access="isAuthenticated()">
 					<td class="buttons"style="width:200px">
 						<button class="editSubmit" style="display:none;">등록</button> <!-- 댓글 수정 등록 -->
-						<button class="btnReply">답글</button>
+						<button class="btnReply" cId="${item.cId }" cGroup="${item.cGorup }">답글</button>
 						<button class="btnEdit"style="margin-left:3px; margin-right:3px">수정</button>
 						<button class="btnDel" cId="${item.cId }" cGroup="${item.cGroup }" cDepth="${item.cDepth }" bId="${detailboard.bId }">삭제</button>
 					</td>
-					
-				<tr class="afterReply" style="display:none;">
-					<td style="width:150px">
-						<sec:authentication property="principal" var="principal"/>
-							작성자: ${principal.username }
-					</td>
-					<td><!-- 대댓글 -->
-						<form class="ReplyComment" action="/RegistComment" method="post">
-							<sec:authentication property="principal" var="principal"/>	
-								<input type="hidden" name="cWriter" value="${principal.username }">
-								<input type="text" size="55" name="cContent">		
-								<input type="hidden" name="cGroup" value="${item.cGroup}">
-								<input type="hidden" name="cOrder" value="${item.cOrder}">
-								<input type="hidden" name="cDepth" value="${item.cDepth}">
-								<input type="hidden" name="bId" value="${detailboard.bId }">
-								<input type="hidden" name="cId" value="${item.cId}">
-						</form>
-					</td>
-					<td><button class="ReplySubmit">등록</button></td> <!-- 대댓글 등록 -->
-				</tr>
 				</sec:authorize>	
 			</c:forEach>	
 		</table>
 	</div>
-
+	
+	<div class="ReplyComment" style="display:none;">
+		<table>
+			<tr class="afterReply">
+				<td style="width:150px">
+					<sec:authentication property="principal" var="principal"/>
+						작성자: ${principal.username }
+				</td>
+				<td><!-- 대댓글 -->
+					<form action="/RegistComment" method="post">
+						<sec:authentication property="principal" var="principal"/>	
+							<input type="hidden" name="cWriter" value="${principal.username }">
+							<input type="text" size="55" name="cContent">		
+							<input type="hidden" name="cGroup" value="${item.cGroup}">
+							<input type="hidden" name="cOrder" value="${item.cOrder}">
+							<input type="hidden" name="cDepth" value="${item.cDepth}">
+							<input type="hidden" name="bId" value="${detailboard.bId }">
+							<input type="hidden" name="cId" value="${item.cId}">
+					</form>
+				</td>
+				<td><button class="ReplySubmit">등록</button></td> <!-- 대댓글 등록 -->
+			</tr>
+		</table>	
+	</div>
+	
 	<div class="CommentLocation"> <!-- 댓글 작성 -->
 		<sec:authorize access="isAuthenticated()">
 			<table style="margin-top:50px; border:hidden;">
@@ -189,8 +193,8 @@
 		});
 
 		$(document).on('click','.btnReply', function(){
-			$(this).parent().parent().next().show();
-			$(this).parent().parent().parent().parent().parent().next().hide();
+			$(this).parent().parent().parent().parent().parent().next().show();
+			$(this).parent().parent().parent().parent().parent().next().next().hide();
 		});
 		
 		$(document).on('click','.ReplySubmit', function(){
