@@ -238,7 +238,7 @@ public class Controller {
 	}
 	
 	@RequestMapping(value="/deleteComment")
-	public String deleteComment(Model model, Board board) {
+	public String deleteComment(Model model, Board board) { // test
 		
 		if(board.getcDepth()>0) {
 			boardservice.delReplyComment(board);
