@@ -6,12 +6,17 @@ import org.apache.ibatis.annotations.Mapper;
 
 import com.lcomputerstudy1.example.domain.Board;
 import com.lcomputerstudy1.example.domain.Pagination;
+import com.lcomputerstudy1.example.domain.Search;
 
 @Mapper
 public interface BoardMapper {
 	public List<Board> selectBoardList(Pagination pagination);
 	
+	public List<Board> selectSearchPost(Pagination pagination);
+	
 	public int boardCount();
+	
+	public int searchCount(Search search);
 	
 	public Board detailBoardList(Board board);
 	

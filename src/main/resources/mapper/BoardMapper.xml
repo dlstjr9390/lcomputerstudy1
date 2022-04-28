@@ -23,6 +23,28 @@
 		LIMIT	#{pageNum}, 5
 	</select>
 	
+		<select id="selectSearchPost" resultType="Board" parameterType="Pagination">
+		SELECT		@b_rownum := @b_rownum -1 AS b_rownum,
+					b_id as bId,
+					b_title as bTitle,
+					b_content as bContent,
+					b_writer as bWriter,
+					b_datetime as bDatetime,
+					b_view as bView,
+					b_group as bGroup,
+					b_order as bOrder,
+					b_depth as bDepth
+				
+		FROM		lc_board as ta, 
+					(SELECT @b_rownum := (SELECT COUNT(*)-#{pageNum}+1 FROM lc_board )) tb
+				
+		WHERE		${search.optionSelect} LIKE CONCAT ('%', #{search.searchText}, '%')
+		
+		ORDER BY	b_group desc, b_order asc
+		
+		LIMIT		#{pageNum}, 5
+	</select>
+	
 	<!-- 글 등록 -->
 	<insert id="RegistBoard" parameterType="Board">	
 		 INSERT INTO 	lc_board(
@@ -50,6 +72,14 @@
 	<select id="boardCount" resultType="int">
 		SELECT COUNT(*) as count
 		FROM	lc_board
+	</select>
+	
+	<!-- 검색된 게시글 수 -->
+	<select id="searchCount" resultType="int" parameterType="Search">
+		SELECT 	COUNT(*) as count
+		FROM 	lc_board
+		WHERE 	${optionSelect} LIKE CONCAT ('%', #{searchText}, '%')
+		
 	</select>
 	
 	<!-- 글 보기 -->

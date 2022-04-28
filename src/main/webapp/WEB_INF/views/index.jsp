@@ -62,15 +62,15 @@
 				<a href="/beforeSignUp">회원가입</a>
 			</sec:authorize>
 		<hr>				
-		<table style="margin-bottom:30px">
+		<table style="margin-bottom:30px; width:90%;">
 			<tr>
 				<th colspan="5" style="text-align:center;">게시글 수: ${pagination.count }</th>
 			</tr>
 			<tr>
-				<th>글번호</th>
-				<th>제목</th>
-				<th>글쓴이</th>
-				<th>조회수</th>
+				<th style="width:15%;">글번호</th>
+				<th style="width:40%;">제목</th>
+				<th style="width:20%;">글쓴이</th>
+				<th style="width:10%;">조회수</th>
 				<th>작성일시</th>
 			</tr>
 			<c:forEach items="${list}" var="item" varStatus="status">
@@ -101,6 +101,7 @@
 		</table>
 		<sec:authorize access="isAuthenticated()">
 			<a href="/Before_registboard" style="margin:10px; padding:10px; width:70px;font-weight:700;background-color:#818181;color:#fff;">작성</a>
+			<a href="/?page=1" style="margin:10px; padding:10px; width:70px;font-weight:700;background-color:#818181; color:#fff;">목록</a>
 		</sec:authorize>
 <!--pagination -->
 	<div>
@@ -141,6 +142,26 @@
 				</c:when>
 			</c:choose>
 		</ul>
+<!-- 검색 -->
+	<div style="margin-left:26%; margin-top:80px;">
+		<form action="/" name="search" method="post">
+		<table>
+			<tr>
+				<td style="border:hidden; text-align:right;"><select name="OptionSelect">
+					<option value="OpTitle">제목</option>
+					<option value="OpContent">제목+내용</option>
+					<option value="OpWriter">작성자</option>		
+				</select></td>
+				<td style="border:hidden;">
+					<input type="text" name="SearchText">
+				</td>
+				<td style="border:hidden; text-align:left;">
+					<button type="submit" class="btnSearch">검색</button>
+				</td>
+			</tr>
+		</table>
+	</form>
+	</div>	
 		<script>
 			$(function(){
 				$('.ulpagination').css({'width':'600px', 'height':'50px', 'margin':'10px auto'});

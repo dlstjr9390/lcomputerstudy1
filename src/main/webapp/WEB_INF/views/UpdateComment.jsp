@@ -39,42 +39,61 @@
 							&nbsp;${item.cContent }</td>
 						</c:if>
 					</c:if>
-					
+				<sec:authorize access="isAuthenticated()">
 					<td class="afterEdit" style="display:none;">
 						<form class="editComment" action="/editComment" name="editComment" method="post">					
-								<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }">
 								<input type="hidden" name="cId" value="${item.cId}">
 								<input type="text" size="55" name="cContent" value="${item.cContent }">
 								<input type="hidden" name="bId" value="${detailboard.bId }">
 						</form>
+				</sec:authorize>		
 					<td style="width:250px">작성일시: ${item.cDatetime }</td>
-					
+				
+				<sec:authorize access="isAuthenticated()">
 					<td class="buttons"style="width:200px">
 						<button class="editSubmit" style="display:none;">등록</button> <!-- 댓글 수정 등록 -->
-						<button class="btnReply">답글</button>
+						<button class="btnReply" cId="${item.cId }" cGroup="${item.cGroup }">답글</button>
 						<button class="btnEdit"style="margin-left:3px; margin-right:3px">수정</button>
 						<button class="btnDel" cId="${item.cId }" cGroup="${item.cGroup }" cDepth="${item.cDepth }" bId="${detailboard.bId }">삭제</button>
 					</td>
-					
 				<tr class="afterReply" style="display:none;">
-					<td style="width:150px">작성자: ${item.cWriter }</td>
-					<td>
-						<form class="ReplyComment" action="/RegistComment" method="post">	
+					<td style="width:150px">
 						<sec:authentication property="principal" var="principal"/>
-							<input type="hidden" name="cWriter" value="${principal.username }">			
-							<input type="hidden" name="cId" value="${item.cId}">
-							<input type="hidden" name="cGroup" value="${item.cGroup}">
-							<input type="hidden" name="cOrder" value="${item.cOrder}">
-							<input type="hidden" name="cDepth" value="${item.cDepth}">
-							<input type="text" size="55" name="cContent">
-							<input type="hidden" name="bId" value="${detailboard.bId }">
-						</form>
+							작성자: ${principal.username }
 					</td>
-					<td><button class="ReplySubmit">등록</button></td> <!-- 대댓글 등록 -->
-				</tr>	
+					<td><!-- 대댓글 -->
+						<textarea cols="80" rows="1"></textarea>
+					</td>
+					<td><!-- 대댓글 등록 -->
+						<button class="ReplySubmit" cId="${item.cId }" bId="${detailboard.bId }" cWriter="${principal.username }" 
+													cGroup="${item.cGroup }" cOrder="${item.cOrder }" cDepth="${item.cDepth }">등록
+						</button>
+					</td>
+				</tr>
+				</sec:authorize>	
 			</c:forEach>	
 		</table>
+			
+ <!-- 댓글 작성 -->
+		<sec:authorize access="isAuthenticated()">
+			<table style="margin-top:50px; border:hidden;">
+				<tr style="border:hidden;">
+					<td style="text-align:left; border:hidden;"> 댓글:</td>
+				<tr style="border:hidden;">
+					<td style ="border:hidden; width:600px;">
+						<form class="CommentSubmit" action="/RegistComment" method="post">
+							<sec:authentication property="principal" var="principal"/>
+								<input type="hidden" name="cWriter" value="${principal.username }">
+								<input type="hidden" name="bId" value="${detailboard.bId }">
+								<input type="text" name="cContent" style="float:left; width:500px;" />
+						</form>
+					</td>
+					<td style="align:left; width:60px;">
+						<button class="btnSubmit">등록</button>
+					</td>
+				</tr>	
+			</table>
+		</sec:authorize>	
 	</div>
-
 </body>
 </html>

@@ -2,17 +2,19 @@ package com.lcomputerstudy1.example.domain;
 
 public class Pagination {
 	
-	int count;
-	int page;
-	int pageNum;
-	int startPage;
-	int endPage;
-	int lastPage;
-	int prevPage;
-	int nextPage;
+	private int count;
+	private int page;
+	private int pageNum;
+	private int startPage;
+	private int endPage;
+	private int lastPage;
+	private int prevPage;
+	private int nextPage;
 	
 	public final int pageUnit;
 	public final int perPage;
+	
+	private Search search;
 	
 	public Pagination() {
 		this(5, 5);
@@ -103,6 +105,14 @@ public class Pagination {
 	
 	public void setNextPage(int nextPage) {
 		this.nextPage = nextPage;
+	}
+
+	public Search getSearch() {
+		return search;
+	}
+
+	public void setSearch(Search search) {
+		this.search = search;
 	}
 
 }

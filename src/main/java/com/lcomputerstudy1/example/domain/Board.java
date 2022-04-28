@@ -21,6 +21,16 @@ public class Board {
 	private int cDepth;
 	private int cIsedit;
 	
+	private BoardFile file;
+	
+	public BoardFile getFile() {
+		return file;
+	}
+
+	public void setFile(BoardFile file) {
+		this.file = file;
+	}
+
 	public int getB_rownum() {
 		return b_rownum;
 	}
@@ -171,4 +181,5 @@ public class Board {
 	public void setcIsedit(int cIsedit) {
 		this.cIsedit = cIsedit;
 	}
+
 }

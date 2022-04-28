@@ -10,10 +10,14 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.lcomputerstudy1.example.domain.Board;
+import com.lcomputerstudy1.example.domain.BoardFile;
 import com.lcomputerstudy1.example.domain.User;
+import com.lcomputerstudy1.example.domain.Util;
 import com.lcomputerstudy1.example.domain.Pagination;
+import com.lcomputerstudy1.example.domain.Search;
 import com.lcomputerstudy1.example.service.BoardService;
 import com.lcomputerstudy1.example.service.UserService;
 
@@ -27,7 +31,42 @@ public class Controller {
 	@Autowired UserService userservice;
 	
 	@RequestMapping("/")
-	public String home(Model model, Pagination pagination) {
+	public String home(Model model, Pagination pagination, Search search) {
+
+		
+		if(search.getOptionSelect() != null) {
+			String option = search.getOptionSelect();
+			String strTitle = "OpTitle";
+			String strContent = "OpContent";
+			
+		
+			if(option.equals(strTitle)) {
+				search.setOptionSelect("b_title");
+			} else if (option.equals(strContent)) {
+				search.setOptionSelect("b_title or b_content");
+			} else {
+				search.setOptionSelect("b_writer");
+			}
+			
+			int count = boardservice.searchCount(search);
+			if(pagination.getPage()>0) {
+				page = pagination.getPage();
+			}
+			
+			pagination.setCount(count);
+			pagination.setPage(page);
+			pagination.setSearch(search);
+			pagination.init();
+			
+			List<Board> list = boardservice.selectSearchPost(pagination);
+			
+			model.addAttribute("list", list);
+			model.addAttribute("pagination", pagination);
+			
+		} else {
+		
+		
+		
 		int count = boardservice.boardCount();
 		if(pagination.getPage()>0) {
 			page = pagination.getPage();
@@ -41,6 +80,8 @@ public class Controller {
 		
 		model.addAttribute("list", list);
 		model.addAttribute("pagination", pagination);
+		}
+
 
 
 		return "/index";
@@ -119,7 +160,13 @@ public class Controller {
 	}
 	
 	@RequestMapping(value="/registboardPro")
-	public String registboard(Model model, Board board) {
+	public String registboard(Model model, Board board, @RequestParam MultipartFile file) {
+		BoardFile boardfile = new BoardFile();
+		Util boardUtil = new Util();
+		
+		boardfile.setFilename(file.getOriginalFilename());
+		boardfile.setConvertname(boardUtil.randomName());
+		
 		
 		if(board.getbGroup()>0) {
 			board.setbOrder(board.getbOrder()+1);

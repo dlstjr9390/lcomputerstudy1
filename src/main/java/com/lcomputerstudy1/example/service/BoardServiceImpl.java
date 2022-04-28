@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.lcomputerstudy1.example.domain.Board;
 import com.lcomputerstudy1.example.domain.Pagination;
+import com.lcomputerstudy1.example.domain.Search;
 import com.lcomputerstudy1.example.mapper.BoardMapper;
 
 @Service("BoardServiceImpl")
@@ -19,8 +20,18 @@ public class BoardServiceImpl implements BoardService {
 		}
 		
 		@Override
+		public List<Board> selectSearchPost(Pagination pagination){
+			return boardmapper.selectSearchPost(pagination);
+		}
+		
+		@Override
 		public int boardCount() {
 			return boardmapper.boardCount();
+		}
+		
+		@Override
+		public int searchCount(Search search) {
+			return boardmapper.searchCount(search);
 		}
 		
 		@Override

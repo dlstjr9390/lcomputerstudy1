@@ -5,11 +5,16 @@ import java.util.List;
 
 import com.lcomputerstudy1.example.domain.Board;
 import com.lcomputerstudy1.example.domain.Pagination;
+import com.lcomputerstudy1.example.domain.Search;
 
 public interface BoardService {
 	public List<Board> selectBoardList(Pagination pagination);
 	
+	public List<Board> selectSearchPost(Pagination pagination);
+	
 	public int boardCount();
+
+	public int searchCount(Search search);
 	
 	public Board detailBoardList(Board board);
 	

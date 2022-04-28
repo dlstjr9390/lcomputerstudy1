@@ -108,40 +108,29 @@
 				<sec:authorize access="isAuthenticated()">
 					<td class="buttons"style="width:200px">
 						<button class="editSubmit" style="display:none;">등록</button> <!-- 댓글 수정 등록 -->
-						<button class="btnReply" cId="${item.cId }" cGroup="${item.cGorup }">답글</button>
+						<button class="btnReply" cId="${item.cId }" cGroup="${item.cGroup }" cOrder="${item.cOrder }" cDepth="${item.cDepth }">답글</button>
 						<button class="btnEdit"style="margin-left:3px; margin-right:3px">수정</button>
 						<button class="btnDel" cId="${item.cId }" cGroup="${item.cGroup }" cDepth="${item.cDepth }" bId="${detailboard.bId }">삭제</button>
 					</td>
+				<tr class="afterReply" style="display:none;">
+					<td style="width:150px">
+						<sec:authentication property="principal" var="principal"/>
+							작성자: ${principal.username }
+					</td>
+					<td><!-- 대댓글 -->
+						<textarea cols="80" rows="1"></textarea>
+					</td>
+					<td><!-- 대댓글 등록 -->
+						<button class="ReplySubmit" cId="${item.cId }" bId="${detailboard.bId }" cWriter="${principal.username }" 
+													cGroup="${item.cGroup }" cOrder="${item.cOrder }" cDepth="${item.cDepth }">등록
+						</button>
+					</td>
+				</tr>
 				</sec:authorize>	
 			</c:forEach>	
 		</table>
-	</div>
-	
-	<div class="ReplyComment" style="display:none;">
-		<table>
-			<tr class="afterReply">
-				<td style="width:150px">
-					<sec:authentication property="principal" var="principal"/>
-						작성자: ${principal.username }
-				</td>
-				<td><!-- 대댓글 -->
-					<form action="/RegistComment" method="post">
-						<sec:authentication property="principal" var="principal"/>	
-							<input type="hidden" name="cWriter" value="${principal.username }">
-							<input type="text" size="55" name="cContent">		
-							<input type="hidden" name="cGroup" value="${item.cGroup}">
-							<input type="hidden" name="cOrder" value="${item.cOrder}">
-							<input type="hidden" name="cDepth" value="${item.cDepth}">
-							<input type="hidden" name="bId" value="${detailboard.bId }">
-							<input type="hidden" name="cId" value="${item.cId}">
-					</form>
-				</td>
-				<td><button class="ReplySubmit">등록</button></td> <!-- 대댓글 등록 -->
-			</tr>
-		</table>	
-	</div>
-	
-	<div class="CommentLocation"> <!-- 댓글 작성 -->
+		
+ <!-- 댓글 작성 -->
 		<sec:authorize access="isAuthenticated()">
 			<table style="margin-top:50px; border:hidden;">
 				<tr style="border:hidden;">
@@ -193,24 +182,29 @@
 		});
 
 		$(document).on('click','.btnReply', function(){
-			$(this).parent().parent().parent().parent().parent().next().show();
+			$(this).parent().parent().next().show();
 			$(this).parent().parent().parent().parent().parent().next().next().hide();
 		});
 		
 		$(document).on('click','.ReplySubmit', function(){
-			$(this).parent().parent().parent().parent().parent().parent().find('.CommentLocation').show();
-			
-			var params2 = $('.ReplyComment').serialize();
-			
+			let cId = $(this).attr('cId');
+			let cGroup = $(this).attr('cGroup');
+			let cOrder = $(this).attr('cOrder');
+			let cDepth = $(this).attr('cDepth');
+			let bId = $(this).attr('bId');
+			let cWriter = $(this).attr('cWriter');
+			let cContent = $(this).parent().prev().find('textarea').val();
+
 			$.ajax({
 				method:"POST",
 				url:"/RegistComment",
-				data:params2,
+				data:{cId:cId, cGroup:cGroup, cOrder:cOrder, cDepth:cDepth, bId:bId, cWriter:cWriter, cContent:cContent},
 				dataType:'html'
 				})
 				.done(function(msg){
 					$('.CommentList').html(msg);
 				});
+
 		});
 
 		$(document).on('click','.btnDel', function(){
