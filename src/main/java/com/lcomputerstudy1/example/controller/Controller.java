@@ -160,13 +160,11 @@ public class Controller {
 	}
 	
 	@RequestMapping(value="/registboardPro")
-	public String registboard(Model model, Board board, @RequestParam MultipartFile file) {
+	public String registboard(Model model, Board board) {	
 		BoardFile boardfile = new BoardFile();
 		Util boardUtil = new Util();
-		
-		boardfile.setFilename(file.getOriginalFilename());
-		boardfile.setConvertname(boardUtil.randomName());
-		
+		List<BoardFile> fileList = board.getFileList();
+
 		
 		if(board.getbGroup()>0) {
 			board.setbOrder(board.getbOrder()+1);

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 
 import com.lcomputerstudy1.example.domain.Board;
+import com.lcomputerstudy1.example.domain.BoardFile;
 import com.lcomputerstudy1.example.domain.Pagination;
 import com.lcomputerstudy1.example.domain.Search;
 import com.lcomputerstudy1.example.mapper.BoardMapper;
@@ -104,7 +105,13 @@ public class BoardServiceImpl implements BoardService {
 			boardmapper.delOriginComment(board);
 		}
 		
+		@Override
 		public void delReplyComment(Board board) {
 			boardmapper.delReplyComment(board);
+		}
+		
+		@Override
+		public void registFile(BoardFile boardfile) {
+			boardmapper.registFile(boardfile);
 		}
 }

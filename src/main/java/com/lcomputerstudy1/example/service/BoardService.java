@@ -4,6 +4,7 @@ import java.util.List;
 
 
 import com.lcomputerstudy1.example.domain.Board;
+import com.lcomputerstudy1.example.domain.BoardFile;
 import com.lcomputerstudy1.example.domain.Pagination;
 import com.lcomputerstudy1.example.domain.Search;
 
@@ -45,6 +46,8 @@ public interface BoardService {
 	public void delOriginComment(Board board);
 	
 	public void delReplyComment(Board board);
+	
+	public void registFile(BoardFile boardfile);
 }
 
 

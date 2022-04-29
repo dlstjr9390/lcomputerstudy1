@@ -228,5 +228,17 @@
 		AND		c_group = #{cGroup}
 	</delete>
 	
+	<!-- 업로드 파일 DB등록 -->
+	<insert id ="registFile" parameterType="BoardFile">
+		INSERT INTO lc_file(
+					f_filename,
+					f_convertname,
+					f_size
+		) VALUES (
+			#{filename},
+			#{convertname},
+			#{fsize}
+		)	
+	</insert>
 	
 </mapper>
