@@ -1,19 +1,10 @@
 package com.lcomputerstudy1.example.domain;
 
-import org.springframework.web.multipart.MultipartFile;
-
 public class BoardFile {
 	private String filename;
 	private String convertname;
-	private long fsize;
-	private MultipartFile file;
+	private int fsize;
 	
-	public MultipartFile getFile() {
-		return file;
-	}
-	public void setFile(MultipartFile file) {
-		this.file = file;
-	}
 	public String getFilename() {
 		return filename;
 	}
@@ -26,10 +17,10 @@ public class BoardFile {
 	public void setConvertname(String convertname) {
 		this.convertname = convertname;
 	}
-	public long getFsize() {
+	public int getFsize() {
 		return fsize;
 	}
-	public void setFsize(long fsize) {
+	public void setFsize(int fsize) {
 		this.fsize = fsize;
 	}
 }

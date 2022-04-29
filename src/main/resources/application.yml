@@ -41,7 +41,6 @@ spring:
            development: true
       session:
        timeout: 7200
-      
         
    error:
       whitelabel:

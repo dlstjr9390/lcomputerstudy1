@@ -28,7 +28,7 @@
 			<sec:authentication property="principal" var="principal"/>
 				<input type="hidden" name="bWriter" value="${principal.username }">
 			<p>내용: <input type="text" name="bContent" id="input_content"><p>
-			<p class="add">파일첨부:&nbsp;<input type="file" class= "files" name="fileList[0].file"><button type="button" class="btnAdd">추가</button></p>
+			<p class="add">파일첨부:&nbsp;<input type="file" id="addfile" class= "files" name="imageFile"><button type="button" class="btnAdd">추가</button></p>
 			<button type="submit">등록하기</button>
 		</form>
 		
@@ -43,7 +43,7 @@
 			} else{
 				$('.add').append('<p>'+
 						'<span style="visibility:hidden;">파일첨부: </span>'+
-						'<input type="file" class="files" name="fileList['+maxAppend+'].file">'+
+						'<input type="file" id="addfile" class= "files" name="imageFile">'+
 						'<button type="button" class="btnAdd">추가</button>'+
 						'<button type="button" class="btnDel">삭제</button>'+'</p>');
 				maxAppend ++;
