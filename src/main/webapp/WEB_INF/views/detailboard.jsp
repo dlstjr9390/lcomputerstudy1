@@ -230,6 +230,7 @@
 					$('.CommentList').html(msg);
 				});
 		});
+		
 	</script>
 </body>
 </html>

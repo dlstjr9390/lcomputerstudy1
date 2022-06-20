@@ -313,6 +313,7 @@
 		AND		c_id = #{cId}
 	</delete>
 	
+	
 	<!-- 원댓글 삭제 -->
 	<delete id="delOriginComment">
 		DELETE FROM	lc_comment

@@ -7,6 +7,7 @@
 <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+
 </head>
 <style>
 	#input_title{

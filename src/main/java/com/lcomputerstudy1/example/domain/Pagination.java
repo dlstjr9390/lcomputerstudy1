@@ -16,6 +16,7 @@ public class Pagination {
 	
 	private Search search;
 	
+	
 	public Pagination() {
 		this(5, 5);
 	}

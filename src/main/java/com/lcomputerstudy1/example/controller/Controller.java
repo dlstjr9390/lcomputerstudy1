@@ -79,6 +79,7 @@ public class Controller {
 		
 		
 		
+			
 		int count = boardservice.boardCount();
 		if(pagination.getPage()>0) {
 			page = pagination.getPage();
