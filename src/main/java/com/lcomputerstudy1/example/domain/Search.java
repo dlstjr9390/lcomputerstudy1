@@ -2,7 +2,6 @@ package com.lcomputerstudy1.example.domain;
 
 public class Search {
 	private String optionSelect;
-
 	private String searchText;
 	
 	public String getOptionSelect() {

@@ -15,11 +15,4 @@ public class Util {
 		
 		return randomName;
 	}
-	
-	public String getExtention(String string) {
-		String ext = string.substring(string.lastIndexOf(".") + 1);
-		
-		return ext;
-		
-	}
 }

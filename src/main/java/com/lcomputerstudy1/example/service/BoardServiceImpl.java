@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 
 import com.lcomputerstudy1.example.domain.Board;
-import com.lcomputerstudy1.example.domain.BoardFile;
 import com.lcomputerstudy1.example.domain.Pagination;
 import com.lcomputerstudy1.example.domain.Search;
 import com.lcomputerstudy1.example.mapper.BoardMapper;
@@ -46,21 +45,6 @@ public class BoardServiceImpl implements BoardService {
 		}
 		
 		@Override
-		public void isimage(Board board, int a) {
-			boardmapper.isimage(board,a);
-		}
-		
-		@Override
-		public void registfile(BoardFile boardfile) {
-			boardmapper.registfile(boardfile);
-		}
-		
-		@Override
-		public List<BoardFile> selectFile(Board board) {
-			return boardmapper.selectFile(board);
-		}
-		
-		@Override
 		public void updateReply(Board board) {
 			boardmapper.updateReply(board);
 		}
@@ -81,11 +65,6 @@ public class BoardServiceImpl implements BoardService {
 		}
 		
 		@Override
-		public int isEdit(Board board) {
-			return boardmapper.isEdit(board);
-		}
-		
-		@Override
 		public void delOriginBoard(Board board) {
 			boardmapper.delOriginBoard(board);
 		}
@@ -93,11 +72,6 @@ public class BoardServiceImpl implements BoardService {
 		@Override
 		public void delReplyBoard(Board board) {
 			boardmapper.delReplyBoard(board);
-		}
-		
-		@Override
-		public void delImageFile(Board board) {
-			boardmapper.delImageFile(board);
 		}
 		
 		@Override

@@ -1,9 +1,5 @@
 package com.lcomputerstudy1.example.domain;
 
-import java.util.List;
-
-import org.springframework.web.multipart.MultipartFile;
-
 public class Board {
 	private int bId;
 	private int b_rownum;
@@ -24,26 +20,6 @@ public class Board {
 	private int cOrder;
 	private int cDepth;
 	private int cIsedit;
-	private int bEditid;
-	private List<BoardFile> files;
-	
-	public List<BoardFile> getFiles() {
-		return files;
-	}
-
-	public void setFiles(List<BoardFile> files) {
-		this.files = files;
-	}
-
-	public int getBeditid() {
-		return bEditid;
-	}
-
-	public void setBeditid(int bEditid) {
-		this.bEditid = bEditid;
-	}
-
-	private List<MultipartFile> imageFile;
 	
 	private BoardFile file;
 	
@@ -204,14 +180,6 @@ public class Board {
 	
 	public void setcIsedit(int cIsedit) {
 		this.cIsedit = cIsedit;
-	}
-
-	public List<MultipartFile> getImageFile() {
-		return imageFile;
-	}
-
-	public void setImageFile(List<MultipartFile> imageFile) {
-		this.imageFile = imageFile;
 	}
 
 }

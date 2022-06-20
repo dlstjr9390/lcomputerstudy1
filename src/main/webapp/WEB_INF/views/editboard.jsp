@@ -4,7 +4,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
 <meta charset="UTF-8">
 <title>Insert title here</title>
 </head>
@@ -18,43 +17,18 @@
 	}
 </style>
 <body>
-	<H1>글 수정</H1>
+	<H1>글 등록</H1>
 		<hr>
 		
-		<form action="/editboardPro" method="post" enctype="multipart/form-data">
+		<form action="/editboardPro" method="post">
 		<!-- csrf  -->
 			<input type="hidden" name="${_csrf.parameterName }" value="${_csrf.token }">
-			<input type="hidden" name="bId" value="${board.bId }">
-			<p>제목: <input type="text" name="bTitle" id="input_title" value="${detailboard.bTitle }"></p>
+			<input type="hidden" name="bId" value="${detailboard.bId }">
+			<p>제목: <input type="text" name="bTitle" value="${detailboard.bTitle }"id="input_title"></p>
 			<sec:authentication property="principal" var="principal"/>
 				<input type="hidden" name="bWriter" value="${principal.username }">
-			<p>내용: <input type="text" name="bContent" id="input_content"  value="${detailboard.bContent }" ><p>
-			<p class="add">파일첨부:&nbsp;<input type="file" id="addfile" class= "files" name="imageFile"><button type="button" class="btnAdd">추가</button></p>
+			<p>내용: <input type="text" name="bContent" value="${detailboard.bContent }"id="input_content"><p>
 			<button type="submit">등록하기</button>
 		</form>
-		
-	<script>
-		var maxAppend = 1; //첨부파일 갯수
-		
-		$(document).on('click', '.btnAdd', function(){
-			if(maxAppend >= 3){
-				alert("최대 첨부파일 개수는 3개 입니다.");
-				return;
-				
-			} else{
-				$('.add').append('<p>'+
-						'<span style="visibility:hidden;">파일첨부: </span>'+
-						'<input type="file" id="addfile" class= "files" name="imageFile">'+
-						'<button type="button" class="btnAdd">추가</button>'+
-						'<button type="button" class="btnDel">삭제</button>'+'</p>');
-				maxAppend ++;
-				};
-			});
 
-		$(document).on('click', '.btnDel', function(){
-				$(this).closest('p').remove();
-				maxAppend --;	
-			});
-	</script>
-</body>
 </html>

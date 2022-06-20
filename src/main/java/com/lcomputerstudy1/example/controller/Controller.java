@@ -1,8 +1,5 @@
 package com.lcomputerstudy1.example.controller;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +9,7 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.lcomputerstudy1.example.domain.Board;
@@ -34,23 +32,23 @@ public class Controller {
 	
 	@RequestMapping("/")
 	public String home(Model model, Pagination pagination, Search search) {
+
 		
 		if(search.getOptionSelect() != null) {
 			String option = search.getOptionSelect();
 			String strTitle = "OpTitle";
-			String strWriter = "OpWriter";
+			String strContent = "OpContent";
 			
 		
 			if(option.equals(strTitle)) {
 				search.setOptionSelect("b_title");
-			} else if (option.equals(strWriter)){
-				search.setOptionSelect("b_writer");
+			} else if (option.equals(strContent)) {
+				search.setOptionSelect("b_title or b_content");
 			} else {
-				search.setOptionSelect("b_content");						
+				search.setOptionSelect("b_writer");
 			}
 			
 			int count = boardservice.searchCount(search);
-			
 			if(pagination.getPage()>0) {
 				page = pagination.getPage();
 			}
@@ -60,20 +58,10 @@ public class Controller {
 			pagination.setSearch(search);
 			pagination.init();
 			
-			
 			List<Board> list = boardservice.selectSearchPost(pagination);
-			
-			if(search.getOptionSelect().equals("b_title")) {
-				search.setOptionSelect("OpTitle");
-			} else if(search.getOptionSelect().equals("b_content")) {
-				search.setOptionSelect("OpContent");
-			} else {
-				search.setOptionSelect("OpWriter");
-			}
 			
 			model.addAttribute("list", list);
 			model.addAttribute("pagination", pagination);
-			model.addAttribute("Search",search);
 			
 		} else {
 		
@@ -146,10 +134,8 @@ public class Controller {
 		
 	@RequestMapping(value="/detailboard")
 	public String detailboard(Model model, Board board) {
-		
 		boardservice.updatebView(board);
 		Board detailboard = boardservice.detailBoardList(board);
-		detailboard.setFiles(boardservice.selectFile(detailboard));
 		List<Board> c_list = boardservice.SelectCommentList(board);
 			
 		model.addAttribute("detailboard", detailboard);
@@ -174,10 +160,14 @@ public class Controller {
 	}
 	
 	@RequestMapping(value="/registboardPro")
-	public String registboard(Model model, Board board) {
+	public String registboard(Model model, Board board, @RequestParam MultipartFile file) {
 		BoardFile boardfile = new BoardFile();
 		Util boardUtil = new Util();
-				
+		
+		boardfile.setFilename(file.getOriginalFilename());
+		boardfile.setConvertname(boardUtil.randomName());
+		
+		
 		if(board.getbGroup()>0) {
 			board.setbOrder(board.getbOrder()+1);
 			board.setbDepth(board.getbDepth()+1);
@@ -192,34 +182,12 @@ public class Controller {
 		}
 		int count = boardservice.boardCount();
 		Pagination pagination = new Pagination();
-		
 		pagination.setCount(count);
 		pagination.setPage(page);
 		pagination.init();
 		
-		
 		List<Board> list = boardservice.selectBoardList(pagination);
-			
-		for (MultipartFile imageFile : board.getImageFile()) {
-			if(imageFile.getOriginalFilename().length() >= 1) {
-				boardfile.setFilename(imageFile.getOriginalFilename());
-				String ext = boardUtil.getExtention(boardfile.getFilename());
-				boardfile.setConvertname(boardUtil.randomName()+"."+ext);
-				Path path = Paths.get("src/main/resources/static/image/"+boardfile.getConvertname());
-				boardfile.setFsize(imageFile.getSize());
-				boardfile.setB_idx(board.getbId());
-				boardfile.setfEditid(board.getBeditid());
-						
-				try {
-					imageFile.transferTo(path);
-				} catch(IOException e) {
-					e.printStackTrace();
-				}
-			
-				boardservice.registfile(boardfile);
-			}	
-		}	
-	
+		
 		model.addAttribute("list", list);
 		model.addAttribute("pagination", pagination);
 		
@@ -229,7 +197,6 @@ public class Controller {
 	
 	@RequestMapping(value="/Before_editboard")
 	public String Before_editboard(Model model, Board board) {
-		
 		Board detailboard = boardservice.detailBoardList(board);
 		model.addAttribute("detailboard",detailboard);
 		
@@ -238,14 +205,8 @@ public class Controller {
 	
 	@RequestMapping(value="/editboardPro")
 	public String editboardPro(Model model, Board board) {
-		BoardFile boardfile = new BoardFile();
-		Util boardUtil = new Util();
-		
-		
+
 		boardservice.editBoard(board);
-		boardservice.delImageFile(board);
-		int isEdit = boardservice.isEdit(board);
-		board.setBeditid(isEdit);
 		
 		int count = boardservice.boardCount();
 		Pagination pagination = new Pagination();
@@ -256,26 +217,6 @@ public class Controller {
 		List<Board> list = boardservice.selectBoardList(pagination);
 		List<Board> c_list = boardservice.SelectCommentList(board);
 		
-		for (MultipartFile imageFile : board.getImageFile()) {
-			if(imageFile.getOriginalFilename().length() >= 1) {
-				boardfile.setFilename(imageFile.getOriginalFilename());
-				String ext = boardUtil.getExtention(boardfile.getFilename());
-				boardfile.setConvertname(boardUtil.randomName()+"."+ext);
-				Path path = Paths.get("src/main/resources/static/image/"+boardfile.getConvertname());
-				boardfile.setFsize(imageFile.getSize());
-				boardfile.setB_idx(board.getbId());
-				boardfile.setfEditid(board.getBeditid());
-						
-				try {
-					imageFile.transferTo(path);
-				} catch(IOException e) {
-					e.printStackTrace();
-				}
-			
-				boardservice.registfile(boardfile);
-			}	
-		}	
-			
 		model.addAttribute("list", list);
 		model.addAttribute("c_list", c_list);
 		model.addAttribute("pagination", pagination);
@@ -285,13 +226,11 @@ public class Controller {
 	
 	@RequestMapping(value="/deleteboard")
 	public String deleteboard(Model model, Board board) {
-		
 		if(board.getbOrder()==1) {
 			boardservice.delOriginBoard(board);
 		} else {
 			boardservice.delReplyBoard(board);
 		}
-		boardservice.delImageFile(board);
 		
 		int count = boardservice.boardCount();
 		Pagination pagination = new Pagination();
@@ -309,7 +248,6 @@ public class Controller {
 	
 	@RequestMapping(value="/RegistComment")
 	public String RegistComment(Model model, Board board) {
-		
 		if(board.getcGroup()>0) {
 			board.setcOrder(board.getcOrder()+1);
 			board.setcDepth(board.getcDepth()+1);
