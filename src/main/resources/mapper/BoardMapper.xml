@@ -2,18 +2,43 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lcomputerstudy1.example.mapper.BoardMapper">
 
+	<!-- Board resultmap -->
+	<resultMap type="com.lcomputerstudy1.example.domain.Board" id="BoardMap">
+		<result property="b_rownum" column="b_rownum"></result>
+		<result property="bId" column="b_id"></result>
+		<result property="bTitle" column="b_title"></result>
+		<result property="bContent" column="b_content"></result>
+		<result property="bWriter" column="b_writer"></result>
+		<result property="bDatetime" column="b_datetime"></result>
+		<result property="bView" column="b_view"></result>
+		<result property="bGroup" column="b_group"></result>
+		<result property="bOrder" column="b_order"></result>
+		<result property="bDepth" column="b_depth"></result>
+		<result property="bEditid" column="b_editid"></result>	
+		
+		<collection property="files" ofType="BoardFile" javaType="java.util.List">
+			<result property="filename" column="f_filename"></result>
+			<result property="convertname" column="f_convertname"></result>
+			<result property="fsize" column="f_size"></result>
+			<result property="b_idx" column="b_idx"></result>
+			<result property="fEditid" column="f_editid"></result> 	
+		</collection>	
+	</resultMap>
+	
+	
+
 	<!-- 목록 불러오기 -->
-	<select id="selectBoardList" resultType="Board">
+	<select id="selectBoardList" resultMap="BoardMap">
 		SELECT	@b_rownum := @b_rownum -1 AS b_rownum,
-				b_id as bId,
-				b_title as bTitle,
-				b_content as bContent,
-				b_writer as bWriter,
-				b_datetime as bDatetime,
-				b_view as bView,
-				b_group as bGroup,
-				b_order as bOrder,
-				b_depth as bDepth
+				b_id,
+				b_title,
+				b_writer,
+				b_datetime,
+				b_view,
+				b_group,
+				b_order,
+				b_depth,
+				b_editid
 				
 		FROM	lc_board as ta, 
 				(SELECT @b_rownum := (SELECT COUNT(*)-#{pageNum}+1 FROM lc_board )) tb
@@ -23,23 +48,34 @@
 		LIMIT	#{pageNum}, 5
 	</select>
 	
-		<select id="selectSearchPost" resultType="Board" parameterType="Pagination">
-		SELECT		@b_rownum := @b_rownum -1 AS b_rownum,
-					b_id as bId,
-					b_title as bTitle,
-					b_content as bContent,
-					b_writer as bWriter,
-					b_datetime as bDatetime,
-					b_view as bView,
-					b_group as bGroup,
-					b_order as bOrder,
-					b_depth as bDepth
+		<select id="selectSearchPost" resultMap="BoardMap">
+		SELECT	@b_rownum := @b_rownum -1 AS b_rownum,
+				b_id,
+				b_title,
+				b_writer,
+				b_datetime,
+				b_view,
+				b_group,
+				b_order,
+				b_depth,
+				b_editid
 				
 		FROM		lc_board as ta, 
 					(SELECT @b_rownum := (SELECT COUNT(*)-#{pageNum}+1 FROM lc_board )) tb
 				
-		WHERE		${search.optionSelect} LIKE CONCAT ('%', #{search.searchText}, '%')
-		
+		<where>
+			<if test="search.optionSelect == 'b_title'">
+				b_title like '%${search.searchText}%'
+			</if>
+			<if test="search.optionSelect == 'b_content'">
+				b_title like '%${search.searchText}%'
+				OR b_content like '%${search.searchText}%'
+			</if>
+			<if test="search.optionSelect == 'b_writer'">
+				b_writer like '%${search.searchText}%'
+			</if>
+		</where>
+				
 		ORDER BY	b_group desc, b_order asc
 		
 		LIMIT		#{pageNum}, 5
@@ -67,6 +103,38 @@
 			SELECT LAST_INSERT_ID()
 		</selectKey>
  	</insert>
+ 	
+ 	<!-- 파일 DB등록 -->
+ 	<insert id="registfile" parameterType="BoardFile">
+ 		INSERT INTO	 	lc_file(
+ 						f_filename,
+ 						f_convertname,
+ 						f_size,
+ 						b_idx,
+ 						f_editid
+ 
+ 		) VALUES (
+ 			#{filename},
+ 			#{convertname},
+ 			#{fsize},
+ 			#{b_idx},
+ 			#{fEditid}
+ 		)
+ 	</insert>
+ 	
+ 	<!-- 첨부파일 목록 -->
+ 	<select id="selectFile" resultType="BoardFile">
+ 		SELECT 	f_filename as filename,
+ 				f_convertname as convertname,
+ 				f_size as fsize,
+ 				b_idx as b_idx,
+ 				f_editid as fEditid
+ 				
+ 		FROM 	lc_file
+		WHERE	b_idx =	#{bId}
+		AND		f_editid = #{bEditid}
+	
+ 	</select>
 	
 	<!-- 게시글 수 -->
 	<select id="boardCount" resultType="int">
@@ -75,24 +143,36 @@
 	</select>
 	
 	<!-- 검색된 게시글 수 -->
-	<select id="searchCount" resultType="int" parameterType="Search">
+	<select id="searchCount" resultType="int">
 		SELECT 	COUNT(*) as count
 		FROM 	lc_board
-		WHERE 	${optionSelect} LIKE CONCAT ('%', #{searchText}, '%')
+		<where>
+			<if test="optionSelect == 'b_title'">
+				b_title like '%${searchText}%'
+			</if>
+			<if test="optionSelect == 'b_content'">
+				b_title like '%${searchText}%'
+				OR b_content like '%${searchText}%'
+			</if>
+			<if test="optionSelect == 'b_writer'">
+				b_writer like '%${searchText}%'
+			</if>
+		</where>
 		
 	</select>
 	
 	<!-- 글 보기 -->
-	<select id="detailBoardList" resultType="Board">
-		SELECT	b_id as bId,
-				b_title as bTitle,
-				b_content as bContent,
-				b_writer as bWriter,
-				b_datetime as bDatetime,
-				b_view as bView,
-				b_group as bGroup,
-				b_order as bOrder,
-				b_depth as bDepth			
+	<select id="detailBoardList" resultMap="BoardMap">
+		SELECT	b_id,
+				b_title,
+				b_content,
+				b_writer,
+				b_datetime,
+				b_view,
+				b_group,
+				b_order,
+				b_depth,
+				b_editid		
 				
 		FROM	lc_board
 		WHERE	1=1
@@ -127,11 +207,17 @@
 	<!-- 글 수정 -->
 	<update id="editBoard">
 		UPDATE	lc_board
-		SET		b_title = #{bTitle}, b_content = #{bContent}
+		SET		b_title = #{bTitle}, b_content = #{bContent}, b_editid = b_editid + 1
 		WHERE 	1=1
 		AND		b_id = #{bId}
 	</update>
 	
+	<!-- 글 수정 id -->
+	<select id="isEdit" resultType="int">
+		SELECT 	b_Editid as bEditid
+		FROM	lc_board
+		WHERE	b_id = #{bId}
+	</select>
 	<!-- 답글 삭제 -->
 	<delete id="delReplyBoard">
 		DELETE FROM	lc_board
@@ -144,6 +230,12 @@
 		DELETE FROM	lc_board
 		WHERE	1=1
 		AND		b_group = #{bGroup}
+	</delete>
+	
+	<!-- 이미지 파일 삭제 -->
+	<delete id="delImageFile">
+		DELETE FROM lc_file
+		WHERE b_idx = #{bId}
 	</delete>
 	
 	
