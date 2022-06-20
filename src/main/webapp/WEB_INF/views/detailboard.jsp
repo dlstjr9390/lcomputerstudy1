@@ -42,23 +42,31 @@
 	}
 </style>
 <body>
-	<table style="margin-bottom:20px;">
+	<table style="width:60%; margin-bottom:20px;">
 		<tr>
-			<th>제목</th>
-			<th>내용</th>
-			<th>글쓴이</th>
+			<th style="">제목</th>		
+			<td style="">${detailboard.bTitle} </td>
 			<th>조회수</th>
-			<th>작성일시</th>
+			<td>${detailboard.bView }</td>
 		</tr>
 		<tr>
-				<td>${detailboard.bTitle} </td>
-				<td>${detailboard.bContent }</td>
-				<td>${detailboard.bWriter }</td>
-				<td>${detailboard.bView }</td>
-				<td>${detailboard.bDatetime }</td>			
-		</tr>		
+			<th>글쓴이</th>
+			<td>${detailboard.bWriter }</td>	
+			<th>작성일시</th>
+			<td>${detailboard.bDatetime }</td>
+		</tr>
+		<tr>
+			<td colspan="4" style="text-align:left; height:300px;">
+				${detailboard.bContent }<br>
+				<c:forEach items ="${detailboard.files }" var="item" varStatus="status">	
+					<img src="/image/${item.convertname}"/><br>
+				</c:forEach>
+			</td>	
+		</tr>	
+				
+
 	</table>
-		<div style="margin-left:35%; margin-bottom:40px;" id="Listbutton">
+		<div style="margin-left:45%; margin-bottom:40px;" id="Listbutton">
 			<sec:authorize access="isAuthenticated()">
 				<a href="/Before_replyboard?bId=${detailboard.bId }&bGroup=${detailboard.bGroup}&bOrder=${detailboard.bOrder}&bDepth=${detailboard.bDepth}" id="comment" style="color:#fff;">답글</a>
 				<a href="/Before_editboard?bId=${detailboard.bId }" style="color:#fff;">수정</a>
@@ -67,10 +75,10 @@
 			<a href="/" style="color:#fff;">목록</a>
 		</div>
 	<div class="CommentList">
-		<table>
+		<table style="width:60%; margin-top:80px;">
 			<c:forEach items="${c_list }" var="item" varStatus="status">
 				<tr>
-					<td style="width:150px">작성자: ${item.cWriter }</td>
+					<th style="width:150px">작성자: ${item.cWriter }</th>
 					
 					<c:if test="${item.cIsedit gt 0 }"> <!-- 수정된 글일 경우 -->
 						<c:if test="${item.cOrder gt 1 }"> <!-- 대댓글일 경우 -->

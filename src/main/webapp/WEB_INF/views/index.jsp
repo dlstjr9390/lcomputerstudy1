@@ -45,6 +45,7 @@
 		padding:0;
 </style>	
 <body>
+	
 	<h1>Home Page</h1>
 		<sec:authorize access="isAuthenticated()">
 			<sec:authentication property="principal" var="principal"/>
@@ -109,7 +110,7 @@
 			<c:choose>
 				<c:when test = "${pagination.prevPage lt pagination.nextPage and pagination.prevPage gt 0}">
 					<li class="lipagination">
-						<a href="/?page=${pagination.prevPage }">
+						<a href="/?page=${pagination.prevPage }&OptionSelect=${Search.optionSelect}&SearchText=${Search.searchText}">
 							◀
 						</a>
 					</li>
@@ -128,7 +129,7 @@
 					
 					<c:when test="${pagination.page ne i }">
 						<li class="lipagination">
-							<a href="/?page=${i}">${i }</a>
+							<a href="/?page=${i}&OptionSelect=${Search.optionSelect}&SearchText=${Search.searchText}">${i }</a>
 						</li>
 					</c:when>
 				</c:choose>
@@ -137,7 +138,7 @@
 			<c:choose>
 				<c:when test="${pagination.nextPage le pagination.lastPage }">
 					<li class="lipagination">
-						<a href="/?page=${pagination.nextPage }">▶</a>
+						<a href="/?page=${pagination.nextPage }&OptionSelect=${Search.optionSelect}&SearchText=${Search.searchText}">▶</a>
 					</li>
 				</c:when>
 			</c:choose>
